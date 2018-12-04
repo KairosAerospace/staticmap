@@ -55,22 +55,22 @@ config = {
 ####################################################################################################
 # comment this out to disable git tagging of buildlib
 # (needs buildlib loaded into the virtualenv)
-print("Making sure buildlib is present and current.")
-pip_install().main(["--upgrade", "kairos-buildlib"])
-
-import buildlib.git as git
-
-try:
-    repo = git.ensure_git_repo(__HERE__)
-    if len(repo.branches) > 0:
-        pkg_name = config["name"]
-        pkg_root = os.path.join(__HERE__, pkg_name)
-        # publish packages for branches that start with 'x-'
-        git.branchify_package(pkg_root, pkg_name, config, rename_prefix="x-")
-    else:
-        print("Skipping git release tagging since this project is not currently tracked by git.")
-except git.NotAGitRepoError:
-    print("Skipping git release tagging since this project is not currently tracked by git.")
+# print("Making sure buildlib is present and current.")
+# pip_install().main(["--upgrade", "kairos-buildlib"])
+#
+# import buildlib.git as git
+#
+# try:
+#     repo = git.ensure_git_repo(__HERE__)
+#     if len(repo.branches) > 0:
+#         pkg_name = config["name"]
+#         pkg_root = os.path.join(__HERE__, pkg_name)
+#         # publish packages for branches that start with 'x-'
+#         git.branchify_package(pkg_root, pkg_name, config, rename_prefix="x-")
+#     else:
+#         print("Skipping git release tagging since this project is not currently tracked by git.")
+# except git.NotAGitRepoError:
+#     print("Skipping git release tagging since this project is not currently tracked by git.")
 
 ####################################################################################################
 
