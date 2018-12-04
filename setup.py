@@ -3,8 +3,6 @@ from __future__ import print_function
 # largely borrowed from
 # https://github.com/pypa/sampleproject/blob/master/setup.py
 
-import importlib
-from pip.commands.install import InstallCommand as pip_install
 from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
