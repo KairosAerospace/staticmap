@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw
 
 
 class Line:
-    def __init__(self, coords, color, width, simplify=True):
+    def __init__(self, coords, color, width, simplify=True, resize_to=True):
         """
         Line that can be drawn in a static map
 
@@ -26,6 +26,7 @@ class Line:
         self.color = color
         self.width = width
         self.simplify = simplify
+        self.resize_to = resize_to
 
     @property
     def extent(self):
@@ -43,7 +44,7 @@ class Line:
 
 
 class CircleMarker:
-    def __init__(self, coord, color, width, outline_color=None):
+    def __init__(self, coord, color, width, outline_color=None, resize_to=True):
         """
         :param coord: a lon-lat pair, eg (175.0, 0.0)
         :type coord: tuple
@@ -56,6 +57,7 @@ class CircleMarker:
         self.color = color
         self.width = width
         self.outline_color = outline_color
+        self.resize_to = resize_to
 
     @property
     def extent_px(self):
@@ -63,7 +65,7 @@ class CircleMarker:
 
 
 class IconMarker:
-    def __init__(self, coord, file_path, offset_x, offset_y):
+    def __init__(self, coord, file_path, offset_x, offset_y, resize_to=True):
         """
         :param coord:  a lon-lat pair, eg (175.0, 0.0)
         :type coord: tuple
@@ -77,6 +79,7 @@ class IconMarker:
         self.coord = coord
         self.img = Image.open(file_path, 'r')
         self.offset = (offset_x, offset_y)
+        self.resize_to = True
 
     @property
     def extent_px(self):
@@ -103,11 +106,12 @@ class Polygon:
     :type simplify: bool
     """
 
-    def __init__(self, coords, fill_color, outline_color, simplify=True):
+    def __init__(self, coords, fill_color, outline_color, simplify=True, resize_to=True):
         self.coords = coords
         self.fill_color = fill_color
         self.outline_color = outline_color
         self.simplify = simplify
+        self.resize_to = True
 
     @property
     def extent(self):
@@ -299,9 +303,9 @@ class StaticMap:
         :return: extent (min_lon, min_lat, max_lon, max_lat)
         :rtype: tuple
         """
-        extents = [l.extent for l in self.lines]
+        extents = [l.extent for l in self.lines if l.resize_to]
 
-        for m in self.markers:
+        for m in [m for m in self.markers if m.resize_to]:
             e = (m.coord[0], m.coord[1])
 
             if zoom is None:
@@ -321,7 +325,7 @@ class StaticMap:
                 _y_to_lat(y - float(e_px[3]) / self.tile_size, zoom)
             )]
 
-        extents += [p.extent for p in self.polygons]
+        extents += [p.extent for p in self.polygons if p.resize_to]
 
         return (
             min(e[0] for e in extents),
