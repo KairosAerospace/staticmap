@@ -12,7 +12,17 @@ import os
 
 MAJOR_VERSION = 0
 MINOR_VERSION = 9
-BUILD_NUMBER = os.environ.get('CIRCLE_BUILD_NUM', 'DEVSNAPSHOT')
+
+try:
+    from staticmap.version import BUILD_NUM
+    BUILD_NUMBER = BUILD_NUM
+except ImportError:
+    if 'CIRCLE_BUILD_NUM' in os.environ:
+        with open("staticmap/version.py", "w") as fp:
+            fp.write("BUILD_NUM={}".format(os.environ['CIRCLE_BUILD_NUM']))
+            BUILD_NUMBER = os.environ['CIRCLE_BUILD_NUM']
+    else:
+        BUILD_NUMBER = 'DEVSNAPSHOT'
 
 # top-level of project directory
 __HERE__ = path.abspath(path.dirname(__file__))
