@@ -28,7 +28,7 @@ except ImportError:
 __HERE__ = path.abspath(path.dirname(__file__))
 
 config = {
-    "name": "kairos_staticmap",
+    "name": "kairos-staticmap",
     "version": "{}.{}.{}".format(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER),
     "packages": find_packages(),
     "description": "Kairos fork of komoot/staticmap",
